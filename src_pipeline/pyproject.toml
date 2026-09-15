@@ -1,12 +1,11 @@
 [project]
 name = "experimental-plant-growth-monitor"
 version = "0.1.0"
-description = "Add your description here"
+description = "MQTT pipeline for a Wokwi plant growth monitor"
 readme = "README.md"
 requires-python = ">=3.13"
+
 dependencies = [
     "paho-mqtt>=2.1.0",
-    "psycopg2-binary>=2.9.13",
     "psycopg[binary]>=3.3.5",
-    "python-dotenv>=1.2.3",
 ]

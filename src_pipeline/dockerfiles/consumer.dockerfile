@@ -1,13 +1,17 @@
 FROM python:3.13-slim-bookworm
 
 WORKDIR /app
-COPY consumer.py /app/
-COPY utils /app/utils
-COPY pyproject.toml /app/
-
-RUN pip install --no-cache-dir uv
-RUN uv sync --no-dev
-
 
 ENV PYTHONUNBUFFERED=1
-CMD ["uv", "run", "consumer.py"]
+ENV PYTHONDONTWRITEBYTECODE=1
+
+RUN pip install --no-cache-dir uv
+
+COPY pyproject.toml uv.lock ./
+
+RUN uv sync --frozen --no-dev
+
+COPY consumer.py ./
+COPY utils ./utils
+
+CMD ["uv", "run", "--no-sync", "consumer.py"]
