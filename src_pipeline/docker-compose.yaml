@@ -1,0 +1,68 @@
+services:
+  timescaledb:
+    image: timescale/timescaledb:latest-pg18
+    container_name: plant-timescaledb
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - timescale_data:/var/lib/postgresql
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+
+  consumer:
+    container_name: plant-consumer
+    build:
+      context: .
+      dockerfile: dockerfiles/consumer.dockerfile
+
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    depends_on:
+      timescaledb:
+        condition: service_healthy
+
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: plant-grafana
+    restart: unless-stopped
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
+
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+    depends_on:
+      timescaledb:
+        condition: service_healthy
+
+
+volumes:
+  timescale_data:
+  grafana_data:

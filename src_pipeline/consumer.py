@@ -76,9 +76,11 @@ def on_message(client, userdata, message):
         data = json.loads(payload)
 
         moisture = get_number(data, "moisture")
-        distance = get_number(data, "distance")
-        plant_height = get_number(data, "plant_height")
-        growth = get_number(data, "growth")
+        distance = get_number(data, "distance_cm")
+        plant_height = get_number(data, "plant_height_cm")
+        growth = get_number(data, "growth_cm")
+
+        
 
         print("Received MQTT data:", data)
 
