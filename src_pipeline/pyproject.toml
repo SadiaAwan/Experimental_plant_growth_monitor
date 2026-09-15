@@ -7,5 +7,6 @@ requires-python = ">=3.13"
 dependencies = [
     "paho-mqtt>=2.1.0",
     "psycopg2-binary>=2.9.13",
+    "psycopg[binary]>=3.3.5",
     "python-dotenv>=1.2.3",
 ]
